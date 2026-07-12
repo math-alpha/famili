@@ -1,3 +1,24 @@
+# Core Spring Boot settings. Prefer environment variables for secrets and connection details.
 spring:
   application:
-    name:
+    name: ${APP_NAME:famili-backend}
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:famili}}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
+  flyway:
+    enabled: ${FLYWAY_ENABLED:true}
+
+# Application-specific config mapped to a typed @ConfigurationProperties bean (com.famili.config.AppConfig)
+app:
+  jwt:
+    # JWT_SECRET should be set in the environment or provided by your secrets store
+    secret: ${JWT_SECRET:}
+    expiration: ${JWT_EXPIRATION_SECONDS:3600}
+  admin:
+    email: ${ADMIN_EMAIL:admin@example.com}
+
+# Notes:
+# - Do NOT commit secrets. Use environment variables, a secrets manager, or a local encrypted file for development.
+# - For local development, place a .env file (ignored by git) or use Docker Compose env_file to inject these values.
+# - For production, inject values from your secret manager (Vault, AWS Secrets Manager, GitHub Secrets via CI/CD, etc.).
